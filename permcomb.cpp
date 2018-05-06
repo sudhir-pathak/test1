@@ -38,7 +38,7 @@ void TelephonePad::PrintComb (int c, const string& input)
 {
 	if (c == input.length ()) {
 		cout << "COMBINATION: " << result.c_str () << endl;
-	} else if ((0 == input[c] - '0') || ('1' == input[c] - '0')) {
+	} else if ((0 == input[c] - '0') || (1 == input[c] - '0')) {
 		return ;
 	} else {
 
