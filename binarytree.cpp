@@ -2,6 +2,29 @@
 #include <string>
 using namespace std;
 
+int Min (int n1, int n2)
+{
+	if (n1 < n2) return n1;
+
+	return n2;
+}
+
+int Max (int n1, int n2)
+{
+	if (n1 > n2) return n1;
+
+	return n2;
+}
+
+short FindIndex (const string& in, const short ins, const char c)
+{
+	for (short i = ins; i < in.length (); i++) {
+		if (in[i] == c) return i - ins;
+	}
+
+	return -1;
+}
+
 class Node
 {
 private:
@@ -35,6 +58,9 @@ private:
 
 	Node* ReconstructTree (const string& pre, const string&in, const short ps, const short pe, const short ins, const short ine) const;
 
+	int MinDepth (const Node*);
+	int MaxDepth (const Node*);
+
 public:
 	BinaryTree () : root (0) {}
 	BinaryTree (Node* n) : root (n) {}
@@ -47,16 +73,39 @@ public:
 	string PreOrderString () { this->PreOrderString(root); return preorders; }
 	string InOrderString () { this->InOrderString(root); return inorders; }
 	void ReconstructTree (const string& pre, const string&in) { if (in.length() != pre.length()) return; root = this->ReconstructTree (pre, in, 0, pre.length(), 0, in.length ()); }
+
+
+	int MinDepth () { return this->MinDepth (root); }
+	int MaxDepth () { return this->MaxDepth (root); }
 };
 
 
-short FindIndex (const string& in, const short ins, const char c)
+int BinaryTree::MinDepth (const Node* n)
 {
-	for (short i = ins; i < in.length (); i++) {
-		if (in[i] == c) return i - ins;
-	}
+	if (n == 0) return 0;
 
-	return -1;
+	if (n->L() == 0 && n->R() == 0) return 1;
+
+	if (!n->L()) return MinDepth (n->R()) + 1;
+
+	if (!n->L()) return MinDepth (n->R()) + 1;
+
+	int n1 = MinDepth(n->L());
+	int n2 = MinDepth(n->R());
+
+	return (1+Min(n1,n2));
+}
+
+int BinaryTree::MaxDepth (const Node* n)
+{
+	if (n == 0) return 0;
+
+	if (n->L() == 0 && n->R() == 0) return 1;
+
+	int n1 = MaxDepth(n->L());
+	int n2 = MaxDepth(n->R());
+
+	return (1+Max(n1,n2));
 }
 
 Node* BinaryTree::ReconstructTree (const string& pre, const string&in, const short ps, const short pe, const short ins, const short ine) const
@@ -133,6 +182,7 @@ void BinaryTree::MakeTree ()
 	Node* n5 = new Node ('F');
 	Node* n6 = new Node ('G');
 	Node* n7 = new Node ('H');
+	Node* n8 = new Node ('I');
 
 	root->Left(n1);
 	root->Right(n2);
@@ -144,6 +194,7 @@ void BinaryTree::MakeTree ()
 	n2->Right(n6);
 
 	n3->Left(n7);
+	n7->Left(n8);
 }
 
 int main (int argc, char* argv[])
@@ -156,6 +207,11 @@ int main (int argc, char* argv[])
 	bt.InOrderPrint ();
 	bt.PreOrderPrint ();
 
+	int d = bt.MinDepth ();
+	printf ("BT Min Depth <%d>\n", d);
+	d = bt.MaxDepth ();
+	printf ("BT Max Depth <%d>\n", d);
+
 	string in = bt.InOrderString ();
 	string pre = bt.PreOrderString ();
 
@@ -167,4 +223,10 @@ int main (int argc, char* argv[])
 	bt2.ReconstructTree (pre, in);
 	bt2.InOrderPrint ();
 	bt2.PreOrderPrint ();
+
+
+	d = bt2.MinDepth ();
+	printf ("BT Min Depth <%d>\n", d);
+	d = bt2.MaxDepth ();
+	printf ("BT Max Depth <%d>\n", d);
 }
